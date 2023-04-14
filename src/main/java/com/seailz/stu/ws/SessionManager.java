@@ -1,7 +1,10 @@
 package com.seailz.stu.ws;
 
+import org.json.JSONObject;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class SessionManager {
@@ -26,5 +29,19 @@ public class SessionManager {
 
     public static void removeRawSession(WebSocketSession session) {
         rawSessions.remove(session);
+    }
+
+    public static void broadcastToAllSessions(JSONObject obj) {
+        new Thread(() -> {
+            for (AuthenticatedSession session : authenticatedSessions.values()) {
+                if (session.websocketSession().isOpen()) {
+                    try {
+                        session.websocketSession().sendMessage(new TextMessage(obj.toString()));
+                    } catch (IOException e) {
+                        continue;
+                    }
+                }
+            }
+        }).start();
     }
 }

@@ -28,7 +28,7 @@ public class AuthenticatedSession implements Session {
         new Thread(() -> {
             try {
                 while (true) {
-                    Thread.sleep(6500);
+                    Thread.sleep(65000);
                     if (!session.isOpen()) break;
                     if (!hasHeartbeated) {
                         session.sendMessage(

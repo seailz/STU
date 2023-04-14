@@ -36,7 +36,7 @@ public class WsTest {
         public WsHandler() throws ExecutionException, InterruptedException {
             WebSocketClient client = new StandardWebSocketClient();
             this.client = client;
-            this.session = client.execute(this, new WebSocketHttpHeaders(), URI.create("ws://localhost:8080")).get();
+            this.session = client.execute(this, new WebSocketHttpHeaders(), URI.create("ws://stuapi.dev")).get();
             session.setTextMessageSizeLimit(1000000);
             session.setBinaryMessageSizeLimit(1000000);
         }
@@ -48,18 +48,19 @@ public class WsTest {
                     new TextMessage(
                             new JSONObject()
                                     .put("op", 0)
-                                    .put("token", "hi lol").toString()
+                                    .put("token", "uF3zJ1yH5cN8sG6fA9t").toString()
                     )
             );
 
             new Thread(() -> {
                 while (true) {
                     try {
-                        Thread.sleep(6000);
+                        Thread.sleep(60000);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                     try {
+                        if (!session.isOpen()) break;
                         session.sendMessage(
                                 new TextMessage(
                                         new JSONObject()
